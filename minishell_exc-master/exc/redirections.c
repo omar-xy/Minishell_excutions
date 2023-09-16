@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 01:35:38 by otaraki           #+#    #+#             */
-/*   Updated: 2023/09/15 06:18:59 by marvin           ###   ########.fr       */
+/*   Updated: 2023/09/16 12:32:58 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,35 +59,33 @@ int	append(int *fdout, char *strout)
 	return 0;
 }
 
-int	red_open(t_token **fds, t_type red, char *f_name)
+int	red_open(int *fds, t_type red, char *f_name)
 {
 	if (red == GREAT)
 	{
-		(*fds)->fdout = open(f_name, O_WRONLY | O_CREAT | O_TRUNC, 0654);// >
-
-		// printf("am here : %s : %d\n", (*fds)->content[0], (*fds)->fdout);
-		if ((*fds)->fdout < 0)
+		*fds = open(f_name, O_WRONLY | O_CREAT | O_TRUNC, 0654);
+		if (*fds < 0)
 			return (-1);
 	}
 	else if (red == LESS)
 	{
-		(*fds)->fdin = open(f_name, O_RDONLY, 0654);
-		if ((*fds)->fdin < 0)
+		*fds = open(f_name, O_RDONLY, 0654);
+		if (*fds < 0)
 			return (-1);
 	}
 	else if (red == APPEND)// still working on it
 	{
-		(*fds)->fdout = open(f_name, O_APPEND | O_CREAT, 0654);
-		if ((*fds)->fdout < 0)
+		*fds = open(f_name, O_APPEND | O_CREAT, 0654);
+		if (*fds < 0)
 			return (-1);
 	}
 	else if (red == HERE_DOC)
 	{
-		(*fds)->fdin = open(f_name, O_RDONLY, 0654);
-		if ((*fds)->fdin < 0)
+		*fds = open(f_name, O_RDONLY, 0654);
+		if (*fds < 0)
 			return (-1);
 	}
-	return (0);// check abut the status
+	return (0);
 }
 
 
@@ -100,35 +98,29 @@ void	open_red(t_token **data, char **cmds,  t_env **env)
 	(void)env;
 	while(cmds[i])
 	{
-		// printf("one_cmd %zu ================================%s\n", i, cmds[i]);
-		// printf("CMD[%zu] ==> %s\n", i, cmds[i]);
-		// printf("CURRENT1 PROCESS ID ==> %d\n", getpid());
 		if (!ft_strcmp(cmds[i], ">"))
 		{
-			// printf("FOUND IN\n");
-			status = red_open(data, GREAT, cmds[i + 1]);
+			printf("FOUND IN\n");
+			status = red_open(&(*data)->fdout, GREAT, cmds[i + 1]);
 			free(cmds[i]);
 			cmds[i] = NULL;
 		}
 		else if (!ft_strcmp(cmds[i], "<"))
 		{
-			// printf("FOUND OUT\n");
-			status = red_open(data, LESS, cmds[i + 1]);
+			status = red_open(&(*data)->fdin, LESS, cmds[i + 1]);
 			free(cmds[i]);
 			cmds[i] = NULL;
 		}
 		else if (!ft_strcmp(cmds[i], ">>"))
 		{
-			// printf("FOUND APPEND\n");
-			// append(&(*data)->fdin, cmds[i + 1]);
-			status = red_open(data, APPEND, cmds[i + 1]);
+			status = red_open(&(*data)->fdout, APPEND, cmds[i + 1]);
 			free(cmds[i]);
 			cmds[i] = NULL;
 		}
 		else if (!ft_strcmp(cmds[i], "<<"))
 		{
 			here_doc(&(*data)->fdin ,cmds[i + 1]);
-			status = red_open(data, HERE_DOC, "/tmp/here_doc");
+			status = red_open(&(*data)->fdin, HERE_DOC, "/tmp/here_doc");
 			free(cmds[i]);
 			cmds[i] = NULL;
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 01:12:28 by ebennix           #+#    #+#             */
-/*   Updated: 2023/09/15 15:31:50 by marvin           ###   ########.fr       */
+/*   Updated: 2023/09/16 12:32:34 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,10 @@ void	me_cd(char **av, t_env **env);
 void	my_echo(t_token *data, char **av, t_env **env);
 void	me_pwd(int fd, char **av, t_env **env);
 void	export_it(char **av, t_env **env);
+int		is_bult_in(char *arg);
 //exec functions:
 void	exceute_it(t_token **data, t_env **env);
-int		red_open(t_token **fds, t_type red, char *f_name);
+int		red_open(int *fds, t_type red, char *f_name);
 int		here_doc(int *fdin, char *str);
 int		append(int *fdout, char *strout);
 void	excute_one_cmd(t_token **args, char **contents, t_env **env);
