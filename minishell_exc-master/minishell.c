@@ -6,7 +6,7 @@
 /*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 23:17:11 by otaraki           #+#    #+#             */
-/*   Updated: 2023/09/17 18:31:22 by otaraki          ###   ########.fr       */
+/*   Updated: 2023/09/17 20:10:46 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,20 +93,13 @@ int main(int ac, char **av, char **env)
         
 		if (content == NULL)
 			break  ;
-		// printf("------------------------------\n");
-		// cmds = ft_split(content, ' ');
 		cmds = ft_split(content, '|');
 		if (cmds == NULL)
 			continue ;
-		// ft_bultin(cmds, &l_env);
 		token = fake_struct(cmds);
 		if (!token)
 			continue ;
-		// printf("%d\n", GREAT);
 		exceute_it(&token, &l_env);
-		// I only excute one cmd case still working 
-			// on multiple cmds && handeling pipes fds
 	}
 	printf("reached parent\n");
 }
-		// printf("%d\n", ft_bultin(cmds, l_env));
