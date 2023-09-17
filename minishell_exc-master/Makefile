@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
+#    By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/20 07:56:09 by ebennix           #+#    #+#              #
-#    Updated: 2023/09/12 22:59:26 by marvin           ###   ########.fr        #
+#    Updated: 2023/09/17 17:40:54 by otaraki          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ ARCH := libft/libft.a
 
 CC := cc 
 
-CFLAGS := -g -Wall -Wextra -Werror 
+CFLAGS := -g -Wall -Wextra -Werror  -fsanitize=address
 # -fsanitize=address
 
 HEADER := inc/minishell.h

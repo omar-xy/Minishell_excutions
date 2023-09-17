@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 23:17:11 by otaraki           #+#    #+#             */
-/*   Updated: 2023/09/15 01:30:22 by marvin           ###   ########.fr       */
+/*   Updated: 2023/09/17 18:31:22 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,7 @@ int main(int ac, char **av, char **env)
     get_env(&l_env, env);
 	while (1)
 	{
-		printf("--->");
-		content = readline("MIMI :");
+		content = readline("-->MIMI :");
         
 		if (content == NULL)
 			break  ;

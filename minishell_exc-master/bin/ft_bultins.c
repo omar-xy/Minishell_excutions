@@ -6,7 +6,7 @@
 /*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/01 09:50:58 by otaraki           #+#    #+#             */
-/*   Updated: 2023/09/16 14:18:00 by otaraki          ###   ########.fr       */
+/*   Updated: 2023/09/17 15:41:17 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 
 int	ft_bultin(t_token *data, char **arg, t_env **env)
 {
-	int is_bult_in = 9;
 	static int exit_s = 0;
 	
 	if (ft_strcmp(arg[0], "env") == 0)
 	{
-		// printf("AKAKA________-------????\n");
+		printf("AKAKA________-------????\n");
 		exit_s = ft_env(1, *env);
 	}
 	else if (ft_strcmp(arg[0], "unset") == 0)
@@ -30,7 +29,7 @@ int	ft_bultin(t_token *data, char **arg, t_env **env)
 	}
 	else if(ft_strcmp(arg[0], "echo") == 0)
 	{
-		// printf("AKAKA________-------????\n");
+		printf("AKAKA________-------????\n");
 		my_echo(data, arg, env);
 	}
 	else if(ft_strcmp(arg[0], "pwd") == 0)
@@ -41,7 +40,7 @@ int	ft_bultin(t_token *data, char **arg, t_env **env)
 		export_it(arg, env);
 	else 
 		return 0;
-	return is_bult_in;
+	return exit_s;
 }
 
 int is_bult_in(char *arg)

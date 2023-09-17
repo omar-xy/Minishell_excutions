@@ -6,7 +6,7 @@
 /*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 01:12:28 by ebennix           #+#    #+#             */
-/*   Updated: 2023/09/16 12:32:34 by otaraki          ###   ########.fr       */
+/*   Updated: 2023/09/17 15:39:23 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_token
 	t_type			type;
 	int 			fdin;
 	int 			fdout;
+	int				shell_lev;
 	struct s_token	*forward;
 	struct s_token	*backward;
 }					t_token;
@@ -85,12 +86,13 @@ void	me_pwd(int fd, char **av, t_env **env);
 void	export_it(char **av, t_env **env);
 int		is_bult_in(char *arg);
 //exec functions:
+void	one_cmd(t_token **cmds, char **args, t_env **env);
 void	exceute_it(t_token **data, t_env **env);
 int		red_open(int *fds, t_type red, char *f_name);
 int		here_doc(int *fdin, char *str);
 int		append(int *fdout, char *strout);
 void	excute_one_cmd(t_token **args, char **contents, t_env **env);
 void	open_red(t_token **data, char **cmds,  t_env **env);
-void	multi_cmd(t_token **data, t_env **env, int nbr_pipes);
+void	multi_cmd(t_token **data, t_env **env);
 char	*get_next_line(int fd);
 #endif

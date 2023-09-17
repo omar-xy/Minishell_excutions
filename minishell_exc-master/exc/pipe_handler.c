@@ -6,26 +6,26 @@
 /*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 20:57:12 by otaraki           #+#    #+#             */
-/*   Updated: 2023/09/16 13:24:47 by otaraki          ###   ########.fr       */
+/*   Updated: 2023/09/17 17:45:20 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-
-void	multi_cmd(t_token **data, t_env **env, int nbr_pipes)
+void	multi_cmd(t_token **data, t_env **env)
 {
+	int			fd[2];
+	int			forked;
+	t_token		*tmp;
+	int			save;
 
-	int	forked;
-	
 	(void)env;
-	(void)nbr_pipes;
-	t_token *tmp  = *data;
-
-	int save = dup(0);
-	int fd[2];
+	tmp	= *data;
+	save = dup(0);
 	while(tmp)
 	{
+		if (!ft_strcmp(tmp->content[0], "cd"))
+			ft_bultin(tmp, tmp->content, env);
 		pipe(fd);
 		forked = fork();
 		if (tmp->fdin != 0)
@@ -36,9 +36,7 @@ void	multi_cmd(t_token **data, t_env **env, int nbr_pipes)
 		if (!forked)
 		{
 			if (tmp->forward && tmp->fdout == 1)
-			{
 				dup2(fd[1], STDOUT_FILENO);
-			}
 			if (tmp->fdout != 1)
 			{
 				dup2((tmp)->fdout, STDOUT_FILENO);
@@ -46,39 +44,25 @@ void	multi_cmd(t_token **data, t_env **env, int nbr_pipes)
 			}
 			close(fd[1]);
 			close(fd[0]);
-			if (ft_bultin(tmp, tmp->content, env) == BULT_IN)
-				 ;
+			if (is_bult_in(tmp->content[0]) == BULT_IN)
+				ft_bultin(tmp, tmp->content, env);
 			else
 				excute_one_cmd(data, tmp->content, env);
-			// exit(0);
+			exit(0);
 		}
 		if (tmp->forward)
-		{
 			dup2(fd[0], STDIN_FILENO);
-		}
 		else
 			close(STDIN_FILENO);
 		close(fd[0]);
 		close(fd[1]);
-		tmp = tmp->forward; 
+		tmp = tmp->forward;
 	}
 	dup2(save, STDIN_FILENO);
 	close(save);
 	while (wait(NULL) != -1)
 		;
 }
-// void	close_fds(int *fds, int nb)
-// {
-// 	int	i;
-	
-// 	i = 0;
-// 	while (i < nb)
-// 	{
-// 		close(fds[i]);
-// 		i++;
-// 	}
-// }
-
 
 // void	multi_cmd(t_token **data, t_env **env, int nbr_pipes)
 // {

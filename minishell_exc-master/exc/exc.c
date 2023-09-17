@@ -6,7 +6,7 @@
 /*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/27 21:05:55 by otaraki           #+#    #+#             */
-/*   Updated: 2023/09/16 14:21:42 by otaraki          ###   ########.fr       */
+/*   Updated: 2023/09/17 17:06:14 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,32 +67,26 @@ void one_cmd(t_token **cmds, char **args, t_env **env)
 	int out;
 
 	if (!args[0])
-		return;
+		return ;
 	out = dup(1);
 	if (is_bult_in(args[0]) == BULT_IN)
 	{
-		printf("IS A FUCING BULTIN!!!\n");
 		if ((*cmds)->fdin != 0)
 		{
-
 			dup2((*cmds)->fdin, STDIN_FILENO);
 			close((*cmds)->fdin);
 		}
 
 		if ((*cmds)->fdout != 1)
 		{
-			printf("the in %d-- the out %d\n", (*cmds)->fdin, (*cmds)->fdout);
-			if (dup2((*cmds)->fdout, STDOUT_FILENO) < 0)
-				printf("WAAAZB!\n");
+			dup2((*cmds)->fdout, STDOUT_FILENO);
 			close((*cmds)->fdout);
 		}
 		save = ft_bultin(*cmds, args, env);
 		dup2(out, STDOUT_FILENO);
-		// close(out);
-			// return ;
 	}
 	else
-		multi_cmd(cmds, env, 0);
+		multi_cmd(cmds, env);
 }
 
 void exceute_it(t_token **data, t_env **env)
@@ -108,9 +102,8 @@ void exceute_it(t_token **data, t_env **env)
 		numb_pipes++;
 		iter = iter->forward;
 	}
-	// printf("NUMBER OF PIPES ==> %d\n", numb_pipes);
 	if (numb_pipes == 0)
 		one_cmd(data, (*data)->content, env);
 	else
-		multi_cmd(data, env, numb_pipes);
+		multi_cmd(data, env);
 }
