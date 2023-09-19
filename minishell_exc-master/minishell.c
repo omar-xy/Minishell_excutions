@@ -6,7 +6,7 @@
 /*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 23:17:11 by otaraki           #+#    #+#             */
-/*   Updated: 2023/09/17 20:10:46 by otaraki          ###   ########.fr       */
+/*   Updated: 2023/09/19 23:00:48 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char *get_key(char *line)
     int i;
 
 	i = 0;
-    while(line[i] && line[i] != '=') // think about this case a+=toto (append the value to env value)
+    while(line[i] && line[i] != '=') // a+=toto (append the value to env value)
         i++;
     key = malloc(sizeof(char) * i + 1);
     if (!key)
@@ -90,7 +90,6 @@ int main(int ac, char **av, char **env)
 	while (1)
 	{
 		content = readline("-->MIMI :");
-        
 		if (content == NULL)
 			break  ;
 		cmds = ft_split(content, '|');
@@ -100,6 +99,7 @@ int main(int ac, char **av, char **env)
 		if (!token)
 			continue ;
 		exceute_it(&token, &l_env);
+		// free_struct_env(l_env);
+		free_struct_data(token);
 	}
-	printf("reached parent\n");
 }

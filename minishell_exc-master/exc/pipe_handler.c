@@ -6,7 +6,7 @@
 /*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/05 20:57:12 by otaraki           #+#    #+#             */
-/*   Updated: 2023/09/17 17:45:20 by otaraki          ###   ########.fr       */
+/*   Updated: 2023/09/19 22:32:00 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,17 @@
 
 void	multi_cmd(t_token **data, t_env **env)
 {
+	t_token		*tmp;
 	int			fd[2];
 	int			forked;
-	t_token		*tmp;
 	int			save;
 
-	(void)env;
 	tmp	= *data;
 	save = dup(0);
 	while(tmp)
 	{
+		if (!tmp->content[0])
+			return ;
 		if (!ft_strcmp(tmp->content[0], "cd"))
 			ft_bultin(tmp, tmp->content, env);
 		pipe(fd);
@@ -47,7 +48,10 @@ void	multi_cmd(t_token **data, t_env **env)
 			if (is_bult_in(tmp->content[0]) == BULT_IN)
 				ft_bultin(tmp, tmp->content, env);
 			else
-				excute_one_cmd(data, tmp->content, env);
+			{
+				if (excute_one_cmd(data, tmp->content, env) == 2)
+					return ;
+			}
 			exit(0);
 		}
 		if (tmp->forward)

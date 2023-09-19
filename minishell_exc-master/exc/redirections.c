@@ -6,7 +6,7 @@
 /*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/01 01:35:38 by otaraki           #+#    #+#             */
-/*   Updated: 2023/09/17 17:37:01 by otaraki          ###   ########.fr       */
+/*   Updated: 2023/09/19 22:30:19 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,13 @@ int here_doc(int *fdin, char *str)
 		return -1;
 	while (1)
 	{
-		// ft_putstr_fd("> ", 1);
 		rd = readline(">");
-		// printf("----%s----\n", rd);
 		if (!rd || (!ft_strcmp(rd, str)))
 			break;
 		rd = ft_strjoin(rd, "\n");
 		ft_putstr_fd(rd, *fdin);
 		free(rd);
 	}
-	// printf("EXITING HEREDOC\n");
 	free(rd);
 	close(*fdin);
 	return 0;
@@ -58,7 +55,7 @@ int	red_open(int *fds, t_type red, char *f_name)
 		if (*fds < 0)
 			return (-1);
 	}
-	else if (red == HERE_DOC)
+	else if (red == HERE_DOC)// need to check on signles
 	{
 		*fds = open(f_name, O_RDONLY, 0654);
 		if (*fds < 0)
@@ -68,14 +65,14 @@ int	red_open(int *fds, t_type red, char *f_name)
 }
 
 
-void	open_red(t_token **data, char **cmds,  t_env **env)
+void	open_red(t_token **data, char **cmds)
 {
-	size_t i;
-	int status; // close all file descriptors in the parent and child process
+	size_t	i;
+	int		status;
 
 	i = 0;
-	(void)env;
-	while(cmds[i])
+	status = 0;
+	while(cmds[i] && (status >= 0))
 	{
 		if (!ft_strcmp(cmds[i], ">"))
 		{
@@ -102,10 +99,13 @@ void	open_red(t_token **data, char **cmds,  t_env **env)
 			free(cmds[i]);
 			cmds[i] = NULL;
 		}
-		if (status < 0)
+		if (status < 0)// segfault when given an invalide file in 
 		{
-			printf("EXITING PROCESS\n");
-			exit(0);// check if theere is an error > error handing
+			printf("%s: No such file or directory\n", cmds[i + 1]);
+			free((*data)->content[0]);
+			(*data)->content[0] = NULL;
+			(*data)->fdin = 0;
+			return ;
 		}
 		++i;
 	}

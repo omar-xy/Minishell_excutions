@@ -6,7 +6,7 @@
 /*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/22 01:12:28 by ebennix           #+#    #+#             */
-/*   Updated: 2023/09/17 15:39:23 by otaraki          ###   ########.fr       */
+/*   Updated: 2023/09/19 22:58:29 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ typedef enum s_type
 typedef struct s_token
 {
 	char			**content;
-	// char			**red_files;
 	t_type			type;
 	int 			fdin;
 	int 			fdout;
@@ -90,9 +89,12 @@ void	one_cmd(t_token **cmds, char **args, t_env **env);
 void	exceute_it(t_token **data, t_env **env);
 int		red_open(int *fds, t_type red, char *f_name);
 int		here_doc(int *fdin, char *str);
-int		append(int *fdout, char *strout);
-void	excute_one_cmd(t_token **args, char **contents, t_env **env);
-void	open_red(t_token **data, char **cmds,  t_env **env);
+int		excute_one_cmd(t_token **args, char **contents, t_env **env);
+void	open_red(t_token **data, char **cmds);
 void	multi_cmd(t_token **data, t_env **env);
 char	*get_next_line(int fd);
+//free functions
+void	free_struct_data(t_token *token);
+void	free_struct_env(t_env *env);
+void	free_array(char **arr);
 #endif

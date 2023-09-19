@@ -6,7 +6,7 @@
 /*   By: otaraki <otaraki@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/27 21:05:55 by otaraki           #+#    #+#             */
-/*   Updated: 2023/09/17 17:06:14 by otaraki          ###   ########.fr       */
+/*   Updated: 2023/09/19 23:03:52 by otaraki          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,25 +39,28 @@ char *check_path(char **s_path, char *cmd)
 	return (NULL);
 }
 
-void excute_one_cmd(t_token **args, char **contents, t_env **env)
+int excute_one_cmd(t_token **args, char **contents, t_env **env)
 {
 	char *path;
 	char *str;
 	char **splited_path;
 
 	(void)args;
-	if (!contents[0])
-		return;
+	if (!contents[0])// don't check about it, should be handled by the parser!
+		return (2);
 	else
 	{
 		path = value_by_key(*env, "PATH");
 		if (path == NULL)
-			return; // error handel : PATH NOT FOUND;(to add)
-		splited_path = ft_split(path, ':');
+			return (printf("%s: No such file or directory\n", contents[0]), 2);
+		splited_path = ft_split(path, ':');// check for NULL if returned
 		str = check_path(splited_path, contents[0]);
 		if (!str)
-			return;									 // error handel
-		execve(str, contents, get_normal_env(*env)); // check case of failure
+			return (printf("Error :command not found\n"), 2);
+		free_array(splited_path);
+		if (execve(str, contents, get_normal_env(*env)) < 0)
+			return (perror(""), 2);	// error handel
+		return 1; // check case of failure
 	}
 }
 
@@ -76,7 +79,6 @@ void one_cmd(t_token **cmds, char **args, t_env **env)
 			dup2((*cmds)->fdin, STDIN_FILENO);
 			close((*cmds)->fdin);
 		}
-
 		if ((*cmds)->fdout != 1)
 		{
 			dup2((*cmds)->fdout, STDOUT_FILENO);
@@ -86,19 +88,21 @@ void one_cmd(t_token **cmds, char **args, t_env **env)
 		dup2(out, STDOUT_FILENO);
 	}
 	else
+	{
 		multi_cmd(cmds, env);
+	}
 }
 
 void exceute_it(t_token **data, t_env **env)
 {
-	t_token *iter;
-	int numb_pipes;
+	t_token		*iter;
+	int			numb_pipes;
 
 	iter = *data;
 	numb_pipes = -1;
 	while (iter)
 	{
-		open_red(&iter, iter->content, env);
+		open_red(&iter, iter->content);
 		numb_pipes++;
 		iter = iter->forward;
 	}
